@@ -35,6 +35,12 @@ int main(int argc, char **argv) {
     printf("name: %s\n", WJEString(entity, "name", WJE_GET, ""));
   }
 
+  while (entity = _WJEObject(schema, "items.properties[]", WJE_GET, &entity))
+  {
+    printf("byk\n");
+  }
+
+
       //doc = WJEObject(NULL, NULL, WJE_NEW);
       //WJEString(doc, "name", WJE_SET, "Serenity");
       //WJEDump(doc);
