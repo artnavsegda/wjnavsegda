@@ -2,11 +2,20 @@
 #include <wjreader.h>
 
 int main(int argc, char **argv) {
-  FILE *jsonfile;
-  WJReader readjson;
-  WJElement doc = NULL;
-  if (jsonfile = fopen(argv[1], "r"))
+  FILE *jsonfile, *schemafile;
+  WJReader readjson, readschema;
+  WJElement doc = NULL, json = NULL;
+  if (!(jsonfile = fopen(argv[1], "r")))
   {
+    puts("json not found");
+    return 1;
+  }
+  if (!(schemafile = fopen(argv[2], "r")))
+  {
+    puts("schema not found");
+    return 1;
+  }
+
     if (readjson = WJROpenFILEDocument(jsonfile, NULL, 0))
     {
       doc = WJEOpenDocument(readjson, NULL, NULL, NULL);
@@ -20,9 +29,4 @@ int main(int argc, char **argv) {
     {
       puts("file not found");
     }
-  }
-  else
-  {
-    puts("file not found");
-  }
 }
