@@ -4,7 +4,8 @@
 int main(int argc, char **argv) {
   FILE *jsonfile, *schemafile;
   WJReader readjson, readschema;
-  WJElement doc = NULL, json = NULL;
+  WJElement doc = NULL, schema = NULL;
+  WJElement entity = NULL;
   if (!(jsonfile = fopen(argv[1], "r")))
   {
     puts("json not found");
@@ -15,18 +16,30 @@ int main(int argc, char **argv) {
     puts("schema not found");
     return 1;
   }
+  if (!(readjson = WJROpenFILEDocument(jsonfile, NULL, 0)))
+  {
+    puts("json failed to open");
+    return 1;
+  }
+  if (!(readschema = WJROpenFILEDocument(schemafile, NULL, 0)))
+  {
+    puts("schema failed to open");
+    return 1;
+  }
+  doc = WJEOpenDocument(readjson, NULL, NULL, NULL);
+  schema = WJEOpenDocument(readschema, NULL, NULL, NULL);
 
-    if (readjson = WJROpenFILEDocument(jsonfile, NULL, 0))
-    {
-      doc = WJEOpenDocument(readjson, NULL, NULL, NULL);
+  while (entity = _WJEObject(doc, "[]", WJE_GET, &entity))
+  {
+    printf("puk\n");
+    printf("name: %s\n", WJEString(entity, "name", WJE_GET, ""));
+  }
+
       //doc = WJEObject(NULL, NULL, WJE_NEW);
-      WJEString(doc, "name", WJE_SET, "Serenity");
-      WJEDump(doc);
-      printf("azaza: %s\n", WJEString(doc, "name", WJE_GET, ""));
+      //WJEString(doc, "name", WJE_SET, "Serenity");
+      //WJEDump(doc);
+      //printf("azaza: %s\n", WJEString(doc, "name", WJE_GET, ""));
+
       WJECloseDocument(doc);
-    }
-    else
-    {
-      puts("file not found");
-    }
+      WJECloseDocument(schema);
 }
