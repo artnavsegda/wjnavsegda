@@ -31,15 +31,13 @@ int main(int argc, char **argv) {
 
   while (entity = _WJEObject(doc, "[]", WJE_GET, &entity))
   {
-  //  printf("puk\n");
     printf("entity : %s\n", WJEString(entity, "name", WJE_GET, ""));
-  //  printf("something: %s\n", WJEString(entity, "something", WJE_GET, ""));
 
     while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter))
     {
-  //    printf("byk\n");
       printf("parameter name: %s\n", parameter->name);
       printf("parameter type: %s\n", WJEString(parameter, "type", WJE_GET, ""));
+      printf("parameter value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
     }
   }
 
