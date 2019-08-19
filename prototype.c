@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
   FILE *jsonfile, *schemafile;
   WJReader readjson, readschema;
   WJElement doc = NULL, schema = NULL;
-  WJElement entity = NULL;
+  WJElement entity = NULL, parameter = NULL;
   if (!(jsonfile = fopen(argv[1], "r")))
   {
     puts("json not found");
@@ -31,15 +31,17 @@ int main(int argc, char **argv) {
 
   while (entity = _WJEObject(doc, "[]", WJE_GET, &entity))
   {
-    printf("puk\n");
-    printf("name: %s\n", WJEString(entity, "name", WJE_GET, ""));
-  }
+  //  printf("puk\n");
+    printf("entity : %s\n", WJEString(entity, "name", WJE_GET, ""));
+  //  printf("something: %s\n", WJEString(entity, "something", WJE_GET, ""));
 
-  while (entity = _WJEObject(schema, "items.properties[]", WJE_GET, &entity))
-  {
-    printf("byk\n");
+    while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter))
+    {
+  //    printf("byk\n");
+      printf("parameter name: %s\n", parameter->name);
+      printf("parameter type: %s\n", WJEString(parameter, "type", WJE_GET, ""));
+    }
   }
-
 
       //doc = WJEObject(NULL, NULL, WJE_NEW);
       //WJEString(doc, "name", WJE_SET, "Serenity");
@@ -49,3 +51,4 @@ int main(int argc, char **argv) {
       WJECloseDocument(doc);
       WJECloseDocument(schema);
 }
+
