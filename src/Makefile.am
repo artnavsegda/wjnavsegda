@@ -1,1 +1,1 @@
-bin_PROGRAMS = hello prototype second
+bin_PROGRAMS = hello prototype draft
