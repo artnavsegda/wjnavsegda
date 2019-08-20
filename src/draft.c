@@ -18,6 +18,16 @@ char option[100] = "";
 
 int level = 0;
 
+WJElement getelementbynameprop(WJElement container, char * text)
+{
+  WJElement entity = NULL;
+  while (entity = _WJEObject(container, "[]", WJE_GET, &entity)) {
+    if (strcmp(WJEString(entity, "name", WJE_GET, ""), text) == 0) {
+      return entity;
+    }
+  }
+}
+
 int setparameter(char * setiface, char * setparam, char * setvalue)
 {
   printf("setting %s %s %s\n",setiface,setparam,setvalue);
@@ -99,7 +109,6 @@ char *
 character_name_generator(const char *text, int state)
 {
     static int list_index, len;
-    char *name;
 
     if (!state) {
         list_index = 0;
@@ -111,6 +120,7 @@ character_name_generator(const char *text, int state)
       case 0:
         while (entity = _WJEObject(doc, "[]", WJE_GET, &entity)) {
           if (strncmp(WJEString(entity, "name", WJE_GET, ""), text, len) == 0) {
+            printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, WJEString(entity, "name", WJE_GET, ""));
             return strdup(WJEString(entity, "name", WJE_GET, ""));
           }
         }
@@ -118,21 +128,14 @@ character_name_generator(const char *text, int state)
       case 1:
         while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
           if (strncmp(parameter->name, text, len) == 0) {
+            printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, parameter->name);
             return strdup(parameter->name);
           }
         }
       break;
       case 2:
-        entity = WJEObject(doc, interface, WJE_GET);
-        char temp[100];
-        sprintf(temp,"items.properties.%s",option);
-        parameter = WJEObject(schema, temp, WJE_GET);
-        puts(temp);
-        puts(parameter->name);
-        puts(WJEString(entity, parameter->name, WJE_GET, ""));
-        //if (strncmp(WJEString(entity, parameter->name, WJE_GET, ""), text, len) == 0) {
-        //  return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
-        //}
+        if (!state)
+          return strdup("hello");
       break;
     }
 
