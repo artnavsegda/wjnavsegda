@@ -120,7 +120,7 @@ character_name_generator(const char *text, int state)
       case 0:
         while (entity = _WJEObject(doc, "[]", WJE_GET, &entity)) {
           if (strncmp(WJEString(entity, "name", WJE_GET, ""), text, len) == 0) {
-            printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, WJEString(entity, "name", WJE_GET, ""));
+            //printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, WJEString(entity, "name", WJE_GET, ""));
             return strdup(WJEString(entity, "name", WJE_GET, ""));
           }
         }
@@ -128,14 +128,21 @@ character_name_generator(const char *text, int state)
       case 1:
         while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
           if (strncmp(parameter->name, text, len) == 0) {
-            printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, parameter->name);
+            //printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, parameter->name);
             return strdup(parameter->name);
           }
         }
       break;
       case 2:
         if (!state)
-          return strdup("hello");
+        {
+          entity = getelementbynameprop(doc,interface);
+          char temp[100];
+          sprintf(temp,"items.properties.%s",option);
+          parameter = WJEObject(schema, temp, WJE_GET);
+          //puts(WJEString(entity, parameter->name, WJE_GET, ""));
+          return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
+        }
       break;
     }
 
