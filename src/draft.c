@@ -31,6 +31,11 @@ WJElement getelementbynameprop(WJElement container, char * text)
 int setparameter(char * setiface, char * setparam, char * setvalue)
 {
   printf("setting %s %s %s\n",setiface,setparam,setvalue);
+  entity = getelementbynameprop(doc,setiface);
+  char temp[100];
+  sprintf(temp,"items.properties.%s",option);
+  parameter = WJEObject(schema, temp, WJE_GET);
+  WJEString(entity, parameter->name, WJE_SET, setvalue);
 }
 
 int execute(char * line)

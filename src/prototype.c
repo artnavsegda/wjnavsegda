@@ -66,6 +66,10 @@ int main(int argc, char **argv) {
 
       printf("parameter value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
 
+      WJEString(entity, parameter->name, WJE_SET, "newvalue");
+
+      WJEDump(doc);
+
       WJECloseDocument(doc);
       WJECloseDocument(schema);
 }
