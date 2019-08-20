@@ -13,13 +13,37 @@ WJElement doc = NULL, schema = NULL;
 WJElement entity = NULL, parameter = NULL;
 
 char greet[100] = ">";
+char interface[100] = "";
+char option[100] = "";
 
 int level = 0;
 
+int setparameter(char * setiface, char * setparam, char * setvalue)
+{
+  printf("setting %s %s %s\n",setiface,setparam,setvalue);
+}
+
 int execute(char * line)
 {
-    sprintf(greet,"%s >",line);
-    level = 1;
+  if (strcmp(line,"..")==0){
+    level--;
+    return 0;
+  }
+    switch (level)
+    {
+      case 0:
+        strcpy(interface,line);
+      break;
+      case 1:
+        strcpy(option,line);
+      break;
+      case 2:
+        setparameter(interface,option,line);
+        return 0;
+      break;
+    }
+      level++;
+    //sprintf(greet,"%s >",line);
 }
 
 int main(int argc, char *argv[])
@@ -97,6 +121,18 @@ character_name_generator(const char *text, int state)
             return strdup(parameter->name);
           }
         }
+      break;
+      case 2:
+        entity = WJEObject(doc, interface, WJE_GET);
+        char temp[100];
+        sprintf(temp,"items.properties.%s",option);
+        parameter = WJEObject(schema, temp, WJE_GET);
+        puts(temp);
+        puts(parameter->name);
+        puts(WJEString(entity, parameter->name, WJE_GET, ""));
+        //if (strncmp(WJEString(entity, parameter->name, WJE_GET, ""), text, len) == 0) {
+        //  return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
+        //}
       break;
     }
 

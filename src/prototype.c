@@ -1,5 +1,16 @@
+#include <string.h>
 #include <wjelement.h>
 #include <wjreader.h>
+
+WJElement getelementbynameprop(WJElement container, char * text)
+{
+  WJElement entity = NULL;
+  while (entity = _WJEObject(container, "[]", WJE_GET, &entity)) {
+    if (strcmp(WJEString(entity, "name", WJE_GET, ""), text) == 0) {
+      return entity;
+    }
+  }
+}
 
 int main(int argc, char **argv) {
   FILE *jsonfile, *schemafile;
@@ -45,6 +56,10 @@ int main(int argc, char **argv) {
       //WJEString(doc, "name", WJE_SET, "Serenity");
       //WJEDump(doc);
       //printf("azaza: %s\n", WJEString(doc, "name", WJE_GET, ""));
+
+      //entity = WJEObject(doc, "[1]", WJE_GET);
+      entity = getelementbynameprop(doc,"vlan1");
+      printf("select entity : %s\n", WJEString(entity, "name", WJE_GET, ""));
 
       WJECloseDocument(doc);
       WJECloseDocument(schema);
