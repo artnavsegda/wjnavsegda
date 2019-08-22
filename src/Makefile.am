@@ -1,1 +1,1 @@
-bin_PROGRAMS = hello prototype draft
+bin_PROGRAMS = jdump zcore hello
