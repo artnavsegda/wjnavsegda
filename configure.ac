@@ -2,7 +2,7 @@ AC_INIT([ArtNavsegda], [1.0], [artnavsegda@gmail.com],[artnavsegda],[https://git
 AM_INIT_AUTOMAKE
 AC_MSG_NOTICE([Art Navsegda])
 AC_PROG_CC_STDC
-AC_CHECK_LIB([readline], [main])
+AC_CHECK_LIB([readline], [readline],,,["-lncurses"])
 AC_CHECK_LIB([wjelement],[__WJEObject])
 AC_CHECK_LIB([wjreader],[WJRFileCallback])
 AC_CONFIG_HEADERS([config.h])
