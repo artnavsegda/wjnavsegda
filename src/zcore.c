@@ -77,8 +77,13 @@ int execute(int argc, char *argv[])
       break;
       case 1:
         sprintf(temp,"items.properties.%s",argv[0]);
-        if (WJEObject(schema, temp, WJE_GET))
+        parameter = WJEObject(schema, temp, WJE_GET);
+        if (parameter)
+        {
+          entity = getelementbynameprop(doc,interface);
+          printf("Value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
           strcpy(option,argv[0]);
+        }
         else
         {
           printf("No property %s defined\n",argv[0]);
@@ -90,6 +95,7 @@ int execute(int argc, char *argv[])
         return 0;
       break;
     }
+    if (level < 1)
       level++;
     //sprintf(greet,"%s >",line);
 }
