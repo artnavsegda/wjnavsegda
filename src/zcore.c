@@ -46,19 +46,25 @@ int arrlength(char **array)
   return length;
 }
 
-int parse(char * stringtoparse)
+int parse(char * stringtoparse, char **tokarr)
 {
-  char *tokarr[100]; // maximum argument count
   int i = 0;
   tokarr[i] = stringtoparse;
-
   while ((tokarr[i] = strtok(tokarr[i], " ")) != NULL)
     tokarr[++i] = NULL;
-
-  printf("number of tokens %d\n", arrlength(tokarr));
 }
 
-int execute(char * line)
+int interpret(char * stringtointerpret)
+{
+  char *tokarr[100]; // maximum argument count
+  parse(stringtointerpret, tokarr);
+  int numberoftokens = arrlength(tokarr);
+  //printf("number of tokens %d\n", numberoftokens);
+  if (numberoftokens > 0)
+    execute(numberoftokens,tokarr);
+}
+
+int execute(int argc, *char argv[])
 {
   if (strcmp(line,"..")==0){
     level--;
@@ -116,7 +122,7 @@ int main(int argc, char *argv[])
       if (!input)
         break;
       add_history(input);
-      execute(input);
+      interpret(input);
       free(input);
     }
 
