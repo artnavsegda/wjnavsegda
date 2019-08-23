@@ -54,6 +54,29 @@ int parse(char * stringtoparse, char **tokarr)
     tokarr[++i] = NULL;
 }
 
+int execute(int argc, char *argv[])
+{
+  if (strcmp(argv[0],"..")==0){
+    level--;
+    return 0;
+  }
+    switch (level)
+    {
+      case 0:
+        strcpy(interface,argv[0]);
+      break;
+      case 1:
+        strcpy(option,argv[0]);
+      break;
+      case 2:
+        setparameter(interface,option,argv[0]);
+        return 0;
+      break;
+    }
+      level++;
+    //sprintf(greet,"%s >",line);
+}
+
 int interpret(char * stringtointerpret)
 {
   char *tokarr[100]; // maximum argument count
@@ -62,29 +85,6 @@ int interpret(char * stringtointerpret)
   //printf("number of tokens %d\n", numberoftokens);
   if (numberoftokens > 0)
     execute(numberoftokens,tokarr);
-}
-
-int execute(int argc, *char argv[])
-{
-  if (strcmp(line,"..")==0){
-    level--;
-    return 0;
-  }
-    switch (level)
-    {
-      case 0:
-        strcpy(interface,line);
-      break;
-      case 1:
-        strcpy(option,line);
-      break;
-      case 2:
-        setparameter(interface,option,line);
-        return 0;
-      break;
-    }
-      level++;
-    //sprintf(greet,"%s >",line);
 }
 
 int main(int argc, char *argv[])
