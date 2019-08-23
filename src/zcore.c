@@ -15,6 +15,7 @@ WJElement entity = NULL, parameter = NULL;
 char greet[100] = ">";
 char interface[100] = "";
 char option[100] = "";
+char temp[100];
 
 int level = 0;
 
@@ -26,13 +27,13 @@ WJElement getelementbynameprop(WJElement container, char * text)
       return entity;
     }
   }
+  return NULL;
 }
 
 int setparameter(char * setiface, char * setparam, char * setvalue)
 {
   printf("setting %s %s %s\n",setiface,setparam,setvalue);
   entity = getelementbynameprop(doc,setiface);
-  char temp[100];
   sprintf(temp,"items.properties.%s",option);
   parameter = WJEObject(schema, temp, WJE_GET);
   WJEString(entity, parameter->name, WJE_SET, setvalue);
@@ -57,16 +58,32 @@ int parse(char * stringtoparse, char **tokarr)
 int execute(int argc, char *argv[])
 {
   if (strcmp(argv[0],"..")==0){
-    level--;
+    if (level > 0)
+      level--;
+    else
+      printf("Already at the command root\n",argv[0]);
     return 0;
   }
     switch (level)
     {
       case 0:
-        strcpy(interface,argv[0]);
+        if (getelementbynameprop(doc,argv[0]) != NULL)
+          strcpy(interface,argv[0]);
+        else
+        {
+          printf("No interface %s found\n",argv[0]);
+          return 0;
+        }
       break;
       case 1:
-        strcpy(option,argv[0]);
+        sprintf(temp,"items.properties.%s",argv[0]);
+        if (WJEObject(schema, temp, WJE_GET))
+          strcpy(option,argv[0]);
+        else
+        {
+          printf("No property %s defined\n",argv[0]);
+          return 0;
+        }
       break;
       case 2:
         setparameter(interface,option,argv[0]);

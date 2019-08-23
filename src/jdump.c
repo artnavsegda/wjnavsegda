@@ -68,6 +68,17 @@ int main(int argc, char **argv) {
 
       WJEString(entity, parameter->name, WJE_SET, "newvalue");
 
+
+      if(WJEObject(schema, "items.properties.ip", WJE_GET))
+        puts("found");
+      else
+        puts("not found");
+
+      if(WJEObject(schema, "items.properties.nothing", WJE_GET))
+        puts("found");
+      else
+        puts("not found");
+
       WJEDump(doc);
 
       WJECloseDocument(doc);
