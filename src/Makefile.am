@@ -1,1 +1,1 @@
-bin_PROGRAMS = jdump zcore hello
+bin_PROGRAMS = jdump zcore hello interpreter
