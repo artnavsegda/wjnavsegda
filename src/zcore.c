@@ -87,12 +87,23 @@ int execute(int argc, char *argv[])
           entitylist();
           return 0;
         }
-        if (getelementbynameprop(doc,argv[0]) != NULL)
-          strcpy(interface,argv[0]);
+        if (argc == 1)
+        {
+          if (getelementbynameprop(doc,argv[0]) != NULL)
+            strcpy(interface,argv[0]);
+          else
+          {
+            printf("No interface %s found\n",argv[0]);
+            return 0;
+          }
+        }
         else
         {
-          printf("No interface %s found\n",argv[0]);
-          return 0;
+          if (argv[1][0]=='?')
+          {
+            parameterlist();
+            return 0;
+          }
         }
       break;
       case 1:
