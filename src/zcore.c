@@ -55,6 +55,20 @@ int parse(char * stringtoparse, char **tokarr)
     tokarr[++i] = NULL;
 }
 
+void entitylist(void)
+{
+    while (entity = _WJEObject(doc, "[]", WJE_GET, &entity)) {
+      puts(WJEString(entity, "name", WJE_GET, ""));
+    }
+}
+
+void parameterlist()
+{
+  while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
+    puts(parameter->name);
+  }
+}
+
 int execute(int argc, char *argv[])
 {
   if (strcmp(argv[0],"..")==0){
@@ -67,6 +81,12 @@ int execute(int argc, char *argv[])
     switch (level)
     {
       case 0:
+        if (argv[0][0]=='?')
+        {
+          //printf("Help is on the way\n",argv[0]);
+          entitylist();
+          return 0;
+        }
         if (getelementbynameprop(doc,argv[0]) != NULL)
           strcpy(interface,argv[0]);
         else
@@ -76,18 +96,27 @@ int execute(int argc, char *argv[])
         }
       break;
       case 1:
-        sprintf(temp,"items.properties.%s",argv[0]);
-        parameter = WJEObject(schema, temp, WJE_GET);
-        if (parameter)
+        if (argv[0][0]=='?')
         {
-          entity = getelementbynameprop(doc,interface);
-          printf("Value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
-          strcpy(option,argv[0]);
-        }
-        else
-        {
-          printf("No property %s defined\n",argv[0]);
+          //printf("Help is on the way\n",argv[0]);
+          parameterlist();
           return 0;
+        }
+        if (argc == 1)
+        {
+          sprintf(temp,"items.properties.%s",argv[0]);
+          parameter = WJEObject(schema, temp, WJE_GET);
+          if (parameter)
+          {
+            entity = getelementbynameprop(doc,interface);
+            printf("Value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
+            strcpy(option,argv[0]);
+          }
+          else
+          {
+            printf("No property %s defined\n",argv[0]);
+            return 0;
+          }
         }
       break;
       case 2:
