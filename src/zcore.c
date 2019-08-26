@@ -118,6 +118,10 @@ int execute(int argc, char *argv[])
             return 0;
           }
         }
+        else
+        {
+          setparameter(interface,argv[0],argv[1]);
+        }
       break;
       case 2:
         setparameter(interface,option,argv[0]);
