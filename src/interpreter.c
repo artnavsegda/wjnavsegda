@@ -12,6 +12,48 @@ char *character_names[][6] = {
     {NULL, NULL}
 };
 
+char *strmbtok ( char *input, char *delimit, char *openblock, char *closeblock) {
+    static char *token = NULL;
+    char *lead = NULL;
+    char *block = NULL;
+    int iBlock = 0;
+    int iBlockIndex = 0;
+
+    if ( input != NULL) {
+        token = input;
+        lead = input;
+    }
+    else {
+        lead = token;
+        if ( *token == '\0') {
+            lead = NULL;
+        }
+    }
+
+    while ( *token != '\0') {
+        if ( iBlock) {
+            if ( closeblock[iBlockIndex] == *token) {
+                iBlock = 0;
+            }
+            token++;
+            continue;
+        }
+        if ( ( block = strchr ( openblock, *token)) != NULL) {
+            iBlock = 1;
+            iBlockIndex = block - openblock;
+            token++;
+            continue;
+        }
+        if ( strchr ( delimit, *token) != NULL) {
+            *token = '\0';
+            token++;
+            break;
+        }
+        token++;
+    }
+    return lead;
+}
+
 int arrlength(char **array)
 {
   int length = 0;
@@ -22,9 +64,11 @@ int arrlength(char **array)
 
 int parse(char * stringtoparse, char **tokarr)
 {
+  char acOpen[]  = {"\"[<{"};
+  char acClose[] = {"\"]>}"};
   int i = 0;
   tokarr[i] = stringtoparse;
-  while ((tokarr[i] = strtok(tokarr[i], " ")) != NULL)
+  while ((tokarr[i] = strmbtok(tokarr[i], " ", acOpen, acClose)) != NULL)
     tokarr[++i] = NULL;
 }
 
