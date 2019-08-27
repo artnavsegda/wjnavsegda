@@ -15,8 +15,7 @@ WJElement entity = NULL, parameter = NULL;
 char greet[100] = ">";
 char interface[100] = "";
 char option[100] = "";
-char temp[100];
-
+char *command;
 int level = 0;
 
 WJElement getelementbynameprop(WJElement container, char * text)
@@ -32,9 +31,10 @@ WJElement getelementbynameprop(WJElement container, char * text)
 
 int setparameter(char * setiface, char * setparam, char * setvalue)
 {
+  char temp[100];
   printf("setting %s %s %s\n",setiface,setparam,setvalue);
   entity = getelementbynameprop(doc,setiface);
-  sprintf(temp,"items.properties.%s",option);
+  sprintf(temp,"items.properties.%s",setparam);
   parameter = WJEObject(schema, temp, WJE_GET);
   WJEString(entity, parameter->name, WJE_SET, setvalue);
 }
@@ -62,10 +62,46 @@ void entitylist(void)
     }
 }
 
+char * entityvalues(const char * text, int len)
+{
+  while (entity = _WJEObject(doc, "[]", WJE_GET, &entity)) {
+    if (strncmp(WJEString(entity, "name", WJE_GET, ""), text, len) == 0) {
+      return strdup(WJEString(entity, "name", WJE_GET, ""));
+    }
+  }
+}
+
 void parameterlist()
 {
   while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
     puts(parameter->name);
+  }
+}
+
+char * parametervalues(const char * text, int len)
+{
+  while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
+    if (strncmp(parameter->name, text, len) == 0) {
+      return strdup(parameter->name);
+    }
+  }
+}
+
+int getparameter(char * getiface, char * getparam)
+{
+  char temp[100];
+  sprintf(temp,"items.properties.%s",getparam);
+  parameter = WJEObject(schema, temp, WJE_GET);
+  if (parameter)
+  {
+    entity = getelementbynameprop(doc,getiface);
+    printf("Value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
+    return 0;
+  }
+  else
+  {
+    printf("No property %s defined\n",getparam);
+    return 1;
   }
 }
 
@@ -81,56 +117,42 @@ int execute(int argc, char *argv[])
     switch (level)
     {
       case 0:
-        if (argv[0][0]=='?')
-        {
-          //printf("Help is on the way\n",argv[0]);
+        if (argv[0][0]=='?') {
           entitylist();
           return 0;
         }
-        if (argc == 1)
-        {
+        if (argc == 1) {
           if (getelementbynameprop(doc,argv[0]) != NULL)
             strcpy(interface,argv[0]);
-          else
-          {
+          else {
             printf("No interface %s found\n",argv[0]);
             return 0;
           }
         }
-        else
-        {
-          if (argv[1][0]=='?')
-          {
+        else if (argc == 2){
+          if (argv[1][0]=='?') {
             parameterlist();
             return 0;
           }
-        }
-      break;
-      case 1:
-        if (argv[0][0]=='?')
-        {
-          //printf("Help is on the way\n",argv[0]);
-          parameterlist();
-          return 0;
-        }
-        if (argc == 1)
-        {
-          sprintf(temp,"items.properties.%s",argv[0]);
-          parameter = WJEObject(schema, temp, WJE_GET);
-          if (parameter)
-          {
-            entity = getelementbynameprop(doc,interface);
-            printf("Value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
-            strcpy(option,argv[0]);
-          }
-          else
-          {
-            printf("No property %s defined\n",argv[0]);
+          else {
+            getparameter(argv[0],argv[1]);
             return 0;
           }
         }
-        else
-        {
+        else {
+          setparameter(argv[0],argv[1],argv[2]);
+          return 0;
+        }
+      break;
+      case 1:
+        if (argv[0][0]=='?') {
+          parameterlist();
+          return 0;
+        }
+        if (argc == 1) {
+          getparameter(interface,argv[0]);
+        }
+        else {
           setparameter(interface,argv[0],argv[1]);
         }
       break;
@@ -196,15 +218,28 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-char **
-character_name_completion(const char *text, int start, int end)
+char * find_command(char **tokarr, int start)
 {
+  int numberoftokens = arrlength(tokarr);
+  if (numberoftokens > 0)
+  {
+    if (start > 0)
+      return tokarr[0];
+  }
+  return NULL;
+}
+
+char ** character_name_completion(const char *text, int start, int end)
+{
+    char *tokarr[100];
+    char *inputline = strdup(rl_line_buffer);
+    parse(inputline, tokarr);
+    command = find_command(tokarr, start);
     rl_attempted_completion_over = 1;
     return rl_completion_matches(text, character_name_generator);
 }
 
-char *
-character_name_generator(const char *text, int state)
+char * character_name_generator(const char *text, int state)
 {
     static int list_index, len;
 
@@ -216,20 +251,14 @@ character_name_generator(const char *text, int state)
     switch (level)
     {
       case 0:
-        while (entity = _WJEObject(doc, "[]", WJE_GET, &entity)) {
-          if (strncmp(WJEString(entity, "name", WJE_GET, ""), text, len) == 0) {
-            //printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, WJEString(entity, "name", WJE_GET, ""));
-            return strdup(WJEString(entity, "name", WJE_GET, ""));
-          }
-        }
+        if (command == NULL)
+          return entityvalues(text,len);
+        else
+          return parametervalues(text,len);
       break;
       case 1:
-        while (parameter = _WJEObject(schema, "items.properties[]", WJE_GET, &parameter)) {
-          if (strncmp(parameter->name, text, len) == 0) {
-            //printf("\ndebug state %d len %d index %d result %s\n",state, len, list_index, parameter->name);
-            return strdup(parameter->name);
-          }
-        }
+        if (command == NULL)
+          return parametervalues(text,len);
       break;
       case 2:
         if (!state)
@@ -238,7 +267,6 @@ character_name_generator(const char *text, int state)
           char temp[100];
           sprintf(temp,"items.properties.%s",option);
           parameter = WJEObject(schema, temp, WJE_GET);
-          //puts(WJEString(entity, parameter->name, WJE_GET, ""));
           return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
         }
       break;
