@@ -1,1 +1,1 @@
-bin_PROGRAMS = jdump zcore hello interpreter
+bin_PROGRAMS = jdump zcore hello interpreter getuci
