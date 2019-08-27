@@ -157,6 +157,26 @@ int getparameter(char * getiface, char * getparam)
   }
 }
 
+char * settingvalues(char * getparam, int state)
+{
+  if (!state)
+  {
+    entity = getelementbynameprop(doc,interface);
+    char temp[100];
+    sprintf(temp,"items.properties.%s",getparam);
+    parameter = WJEObject(schema, temp, WJE_GET);
+    char * testquote = WJEString(entity, parameter->name, WJE_GET, "");
+    if (strchr(testquote,' '))
+    {
+      sprintf(temp,"\"%s\"", testquote);
+      return strdup(temp);
+    }
+    else
+      return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
+  }
+  return NULL;
+}
+
 int execute(int argc, char *argv[])
 {
   if (strcmp(argv[0],"..")==0){
@@ -311,16 +331,11 @@ char * character_name_generator(const char *text, int state)
       case 1:
         if (command == NULL)
           return parametervalues(text,len);
+        else
+          return settingvalues(command, state);
       break;
       case 2:
-        if (!state)
-        {
-          entity = getelementbynameprop(doc,interface);
-          char temp[100];
-          sprintf(temp,"items.properties.%s",option);
-          parameter = WJEObject(schema, temp, WJE_GET);
-          return strdup(WJEString(entity, parameter->name, WJE_GET, ""));
-        }
+        return settingvalues(option, state);
       break;
     }
 
