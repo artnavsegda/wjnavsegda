@@ -4,7 +4,7 @@
 #include <wjreader.h>
 
 int main(int argc, char **argv) {
-  WJElement input = NULL, output = NULL, inputobj = NULL, iface = NULL;
+  WJElement input = NULL, output = NULL, ifaceinput = NULL, ifaceoutput = NULL;
   WJReader readjson;
   FILE *fp;
   fp = popen("./wrapper.sh", "r");
@@ -20,15 +20,15 @@ int main(int argc, char **argv) {
   }
 
   input = WJEOpenDocument(readjson, NULL, NULL, NULL);
-  //inputobj = WJEObject(input,"values",WJE_GET);
-  while (iface = _WJEObject(input,"values[]", WJE_GET, &iface))
+  output = WJEArray(NULL, NULL, WJE_NEW);
+  while (ifaceinput = _WJEObject(input,"values[]", WJE_GET, &ifaceinput))
   {
-    WJEDump(iface);
+    //puts(ifaceinput->name);
+    //WJEDump(ifaceinput);
+    ifaceoutput = WJEObject(output, "interface", WJE_NEW);
+    WJEString(ifaceoutput,"name",WJE_NEW,ifaceinput->name);
   }
 
-
-
-  //output = WJEObject(NULL, NULL, WJE_NEW);
-  //WJEDump(inputobj);
+  WJEDump(output);
 
 }
