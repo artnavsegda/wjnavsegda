@@ -9,7 +9,7 @@
 char **character_name_completion(const char *, int, int);
 char *character_name_generator(const char *, int);
 
-WJElement doc = NULL, schema = NULL;
+WJElement doc = NULL, schema = NULL, input = NULL, ifaceinput = NULL, ifaceoutput = NULL;
 WJElement entity = NULL, parameter = NULL;
 
 char greet[100] = ">";
@@ -252,29 +252,65 @@ int main(int argc, char *argv[])
 {
     rl_attempted_completion_function = character_name_completion;
 
-    FILE *jsonfile, *schemafile;
+    FILE *jsonstream, *schemafile;
     WJReader readjson, readschema;
-    if (!(jsonfile = fopen(argv[1], "r")))
+
+    if (!(jsonstream = popen("./wrapper.sh", "r")))
     {
-      puts("json not found");
+      puts("handle error");
       return 1;
     }
-    if (!(schemafile = fopen(argv[2], "r")))
+
+    if (!(schemafile = fopen(argv[1], "r")))
     {
       puts("schema not found");
       return 1;
     }
-    if (!(readjson = WJROpenFILEDocument(jsonfile, NULL, 0)))
+
+    if (!(readjson = WJROpenFILEDocument(jsonstream, NULL, 0)))
     {
       puts("json failed to open");
       return 1;
     }
+
     if (!(readschema = WJROpenFILEDocument(schemafile, NULL, 0)))
     {
       puts("schema failed to open");
       return 1;
     }
-    doc = WJEOpenDocument(readjson, NULL, NULL, NULL);
+
+    input = WJEOpenDocument(readjson, NULL, NULL, NULL);
+
+    doc = WJEArray(NULL, NULL, WJE_NEW);
+
+    while (ifaceinput = _WJEObject(input,"values[]", WJE_GET, &ifaceinput))
+    {
+      ifaceoutput = WJEObject(doc, "interface", WJE_NEW);
+
+      WJEString(ifaceoutput,"name",WJE_NEW,ifaceinput->name);
+
+      char * macaddr = WJEString(ifaceinput,"macaddr",WJE_GET,"");
+      if (macaddr[0])
+      {
+        WJEString(ifaceoutput,"macaddr",WJE_NEW,macaddr);
+      }
+
+      int defaultroute = WJEInt32(ifaceinput,"defaultroute",WJE_GET,-1);
+      if (defaultroute != -1)
+      {
+        WJEBool(ifaceoutput,"defaultroute",WJE_NEW,(XplBool)defaultroute);
+      }
+
+      int metric = WJEInt32(ifaceinput,"metric",WJE_GET,-1);
+      if (metric != -1)
+      {
+        WJEInt32(ifaceoutput,"metric",WJE_NEW,metric);
+      }
+
+    }
+
+
+
     schema = WJEOpenDocument(readschema, NULL, NULL, NULL);
 
     while (1)
