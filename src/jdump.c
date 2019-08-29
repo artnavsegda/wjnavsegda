@@ -59,12 +59,12 @@ int main(int argc, char **argv) {
 
       //entity = WJEObject(doc, "[1]", WJE_GET);
       entity = getelementbynameprop(doc,"vlan1");
-      printf("select entity : %s\n", WJEString(entity, "name", WJE_GET, ""));
+      printf("%s.", WJEString(entity, "name", WJE_GET, ""));
 
       parameter = WJEObject(schema, "items.properties.ip", WJE_GET);
-      printf("parameter name: %s\n", parameter->name);
+      printf("%s = ", parameter->name);
 
-      printf("parameter value: %s\n", WJEString(entity, parameter->name, WJE_GET, ""));
+      printf("%s\n", WJEString(entity, parameter->name, WJE_GET, ""));
 
       WJEString(entity, parameter->name, WJE_SET, "newvalue");
 
