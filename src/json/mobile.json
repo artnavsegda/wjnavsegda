@@ -5,8 +5,7 @@
                 "username":     "vpn11930",
                 "password":     "kHye%@09nnBSA",
                 "mode":         "auto",
-                "enable":       true,
-                "bands":        ["900","1800","2100","2600"]
+                "enable":       true
             },
             {
                 "name":         "sim2",
@@ -14,7 +13,6 @@
                 "username":     "user9234729",
                 "password":     "0912hbjahse6898ryfha",
                 "mode":         "lte",
-                "enable":       true,
-                "bands":        ["1800","2100"]
+                "enable":       true
             }
 ]

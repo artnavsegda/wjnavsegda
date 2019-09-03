@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
   FILE *jsonfile, *schemafile;
   WJReader readjson, readschema;
   WJElement doc = NULL, schema = NULL;
-  WJElement entity = NULL, parameter = NULL;
+  WJElement entity = NULL, parameter = NULL, enumoption = NULL;
   if (!(jsonfile = fopen(argv[1], "r")))
   {
     puts("json not found");
@@ -53,32 +53,13 @@ int main(int argc, char **argv) {
     }
   }
 
-      //doc = WJEObject(NULL, NULL, WJE_NEW);
-      //WJEString(doc, "name", WJE_SET, "Serenity");
-      //WJEDump(doc);
-      //printf("azaza: %s\n", WJEString(doc, "name", WJE_GET, ""));
-
-      //entity = WJEObject(doc, "[1]", WJE_GET);
-      entity = getelementbynameprop(doc,"vlan1");
-      printf("%s.", WJEString(entity, "name", WJE_GET, ""));
-
-      parameter = WJEObject(schema, "items.properties.ip", WJE_GET);
-      printf("%s = ", parameter->name);
-
-      printf("%s\n", WJEString(entity, parameter->name, WJE_GET, "None"));
-
-      WJEString(entity, parameter->name, WJE_SET, "newvalue");
-
-
-      if(WJEObject(schema, "items.properties.ip", WJE_GET))
-        puts("found");
-      else
-        puts("not found");
-
-      if(WJEObject(schema, "items.properties.nothing", WJE_GET))
-        puts("found");
-      else
-        puts("not found");
+      if (WJEArrayF(schema, WJE_GET, NULL, "items.properties.mode.enum"))
+      {
+        while (enumoption = WJEGetF(schema, enumoption, "items.properties.mode.enum"))
+        {
+          puts(WJEString(enumoption, NULL, WJE_GET, ""));
+        }
+      }
 
       WJEDump(doc);
 
