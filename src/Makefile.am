@@ -1,1 +1,1 @@
-bin_PROGRAMS = jdump zcore hello interpreter getuci shellread parseuci config
+bin_PROGRAMS = jdump zcore hello interpreter getuci shellread parseuci config multiread

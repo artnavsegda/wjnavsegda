@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 
       if (WJEArrayF(schema, WJE_GET, NULL, "items.properties.mode.enum"))
       {
-        while (enumoption = WJEGetF(schema, enumoption, "items.properties.mode.enum"))
+        while (enumoption = WJEGetF(schema, enumoption, "items.properties.mode.enum[]"))
         {
           puts(WJEString(enumoption, NULL, WJE_GET, ""));
         }
