@@ -18,11 +18,12 @@ int main(int argc, char **argv) {
   }
   schema = WJEOpenDocument(readschema, NULL, NULL, NULL);
 
-  WJEDump(schema);
+  //WJEDump(schema);
 
   if (WJEGet(schema,"patternProperties",NULL))
   {
     puts("type1");
+    WJEDump(WJEGet(schema,"patternProperties[0]",NULL));
   }
   else if (WJEGet(schema,"properties",NULL))
   {
