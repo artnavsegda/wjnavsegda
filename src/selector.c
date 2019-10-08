@@ -20,6 +20,15 @@ int main(int argc, char **argv) {
 
   WJEDump(schema);
 
+  if (WJEGet(schema,"patternProperties",NULL))
+  {
+    puts("type1");
+  }
+  else if (WJEGet(schema,"properties",NULL))
+  {
+    puts("type2");
+  }
+
   WJECloseDocument(schema);
 }
 
