@@ -3,7 +3,7 @@
 #include <wjreader.h>
 
 int main(int argc, char **argv) {
-  *schemafile;
+  FILE * schemafile;
   WJReader readschema;
   WJElement schema = NULL;
   if (!(schemafile = fopen(argv[1], "r")))
