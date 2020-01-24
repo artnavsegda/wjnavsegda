@@ -1,45 +1,4 @@
 {
-  "definitions": {
-    "freq": {
-      "type": "string",
-      "enum": ["2.4Ghz", "5Ghz"],
-    },
-    "2.4Ghz": {
-      "default":{
-        "channels": {
-          "enum": [1,2,3,4,5,6,7,8,9,10]
-        },
-      },
-      "RU":{
-        "channels": {
-        "enum": [1,2,3,4,5,6]
-          },
-        },
-      "CN":{
-        "channels": {
-          "enum": [1,2,3,4]
-        },
-      },
-    },
-    "5Ghz": {
-      "default":{
-        "channels": {
-          "enum": [36,40,44,48]
-        },
-      },
-      "RU":{
-        "channels": {
-          "enum": [36,40,44,48,149,152,153,157]
-        },
-      },
-      "CN":{
-        "channels": {
-          "enum": [36,40,44,48,165,161,149]
-        },
-      },
-    },
-  },
-
   "title": "wiphy",
   "description": "WiFi Interfaces list",
   "type": "object",
@@ -52,7 +11,10 @@
           "type": "string",
           "description": "Some anther radio value"
         },
-        "freq": {"$ref": "#/definitions/freq"},
+        "freq": {
+          "type": "string",
+          "enum": ["2.4Ghz", "5Ghz"],
+        },
         "htmode": {
           "type": "string",
           "description": "HT radio mode",
@@ -63,29 +25,64 @@
           "description": "Radio regulation region",
           "enum": ["default", "RU"],
         },
+        "channel": {
+          "type": "number",
+          "description": "Channel number",
+        }
       },
       "anyOf": [
         { "properties": {
-            "country": {"enum": ["RU"]},
-            "freq": {"enum": ["2.4Ghz"]},
-            "channel": {"$ref": "#/definitions/2.4Ghz/RU/channels"}
+            "country": {
+              "enum": ["RU"],
+              "description": "Russia 2.4"
+            },
+            "freq": {
+              "enum": ["2.4Ghz"]
+            },
+            "channel": {
+            	"enum": [1,2,3,4,5,6]
+          	}
         }},
         { "properties": {
-            "country": {"enum": ["RU"]},
-            "freq": {"enum": ["5Ghz"]},
-            "channel": {"$ref": "#/definitions/5Ghz/RU/channels"}
+            "country": {
+              "enum": ["RU"],
+              "description": "Russia 5"
+            },
+            "freq": {
+              "enum": ["5Ghz"]
+            },
+            "channel": {
+          		"enum": [36,40,44,48,149,152,153,157]
+        	}
         }},
         { "properties": {
-            "country": {"enum": ["default"]},
-            "freq": {"enum": ["2.4Ghz"]},
-            "channel": {"$ref": "#/definitions/2.4Ghz/default/channels"}
+            "country": {
+              "enum": ["default"],
+              "description": "default 2.4"
+            },
+            "freq": {
+              "enum": ["2.4Ghz"]
+            },
+            "channel": {
+          		"enum": [1,2,3,4,5,6,7,8,9,10]
+        	}
         }},
         { "properties": {
-            "country": {"enum": ["default"]},
-            "freq": {"enum": ["5Ghz"]},
-            "channel": {"$ref": "#/definitions/5Ghz/default/channels"}
+            "country": {
+              "enum": ["default"],
+              "description": "default 5"
+            },
+            "freq": {
+              "enum": ["5Ghz"]
+            },
+            "channel": {
+          		"enum": [36,40,44,48]
+        	}
         }},
       ]
     }
+  },
+  "acquire": {
+     "file": "wiphy.json"
   }
 }
