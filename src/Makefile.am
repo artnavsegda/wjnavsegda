@@ -1,1 +1,1 @@
-bin_PROGRAMS = jdump zcore hello interpreter getuci shellread parseuci config selector conditional
+bin_PROGRAMS = jdump hello interpreter getuci shellread parseuci config selector validate
