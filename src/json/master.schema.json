@@ -1,26 +1,36 @@
 {
+  "definitions":{
+    "freq":{
+      "type":"string",
+      "enum":[
+        "2.4Ghz",
+        "5Ghz"
+      ]
+    }
+  },
   "$schema":"http://json-schema.org/schema#",
   "title":"master",
   "description":"switch master ports list",
   "type":"object",
+  "namesake":"name",
   "patternProperties":{
-    "^port":{
+    ".*":{
       "type":"object",
       "title":"HW port entity",
       "properties":{
         "name":{
-          "type":"string"
+          "type":"string",
+          "hidden":true
         },
         "freq":{
-          "type":"string",
-          "enum":[
-            "2.4Ghz",
-            "5Ghz"
-          ]
+          "$ref":"#/definitions/freq"
         },
         "device":{
           "type":"string",
           "description":"Defines which switch to configure",
+          "cue":[
+            "switch.device"
+          ],
           "readonly":true
         },
         "port":{
@@ -30,5 +40,15 @@
         }
       }
     }
+  },
+  "commands":{
+  },
+  "acquire":{
+    "shell":"handler.sh",
+    "args":[
+      "get",
+      "master.schema",
+      "switch-master-ports"
+    ]
   }
 }

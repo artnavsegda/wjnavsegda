@@ -2,8 +2,8 @@
   "port_6":{
     "name":"eth1",
     "device":"switch0",
-    "port":"6",
-    "freq":"2.5Ghz"
+    "port":6,
+    "freq":"2.4Ghz"
   },
   "port_5":{
     "name":"eth0",
