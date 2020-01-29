@@ -1,0 +1,34 @@
+{
+  "$schema":"http://json-schema.org/schema#",
+  "title":"master",
+  "description":"switch master ports list",
+  "type":"object",
+  "patternProperties":{
+    "^port":{
+      "type":"object",
+      "title":"HW port entity",
+      "properties":{
+        "name":{
+          "type":"string"
+        },
+        "freq":{
+          "type":"string",
+          "enum":[
+            "2.4Ghz",
+            "5Ghz"
+          ]
+        },
+        "device":{
+          "type":"string",
+          "description":"Defines which switch to configure",
+          "readonly":true
+        },
+        "port":{
+          "type":"number",
+          "description":"PHY switch port",
+          "readonly":true
+        }
+      }
+    }
+  }
+}

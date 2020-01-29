@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "test",
+  "description": "test list",
+  "type": "object",
+  "namesake": "moniker",
+  "patternProperties": {
+    "^test": {
+      "type": "object",
+      "title": "test entity",
+      "properties": {
+        "something": {
+          "type": "string"
+        },
+        "someone": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "around": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "^quest": {
+      "type": "object",
+      "title": "test entity two",
+      "properties": {
+        "somebody": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

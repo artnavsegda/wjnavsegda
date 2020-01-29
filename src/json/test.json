@@ -1,0 +1,15 @@
+{
+  "test1": {
+    "moniker": "alpha",
+    "something" : 1,
+    "someone" : [1,2,3,4],
+    "around" : ["one","two","three"]
+  },
+  "test3": {
+    "moniker": "bravo"
+  },
+  "quest": {
+    "moniker": "charlie",
+    "somebody" : "once"
+  }
+}
