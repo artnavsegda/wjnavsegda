@@ -80,6 +80,9 @@ int main(int argc, char **argv) {
 	WJReader readschema;
 	WJElement json;
 	WJElement schema;
+
+	WJElement root;
+
 	char *format;
 
 	if(argc != 3 && argc != 4) {
@@ -116,12 +119,15 @@ int main(int argc, char **argv) {
 		return 4;
 	}
 
-	WJEDump(json);
-	printf("json: %s\n", readjson->depth ? "bad" : "good");
-	WJEDump(schema);
-	printf("schema: %s\n", readschema->depth ? "bad" : "good");
+	root = WJEObject(NULL, NULL, WJE_NEW);
+	WJERename(schema,"schema");
+	WJEAttach(root, schema);
+	WJERename(json,"data");
+	WJEAttach(root, json);
 
-	if(WJESchemaValidate(schema, json, schema_error, schema_load, schema_free,
+	WJEDump(root);
+
+	if(WJESchemaValidate(WJEGet(root,"schema",NULL), WJEGet(root,"data",NULL), schema_error, schema_load, schema_free,
 						 format)) {
 		printf("validation: PASS\n");
 	} else {
