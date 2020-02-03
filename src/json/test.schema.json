@@ -1,11 +1,17 @@
 {
+  "definitions":{
+    "someone": {
+      "type": "string",
+      "enum": ["one", "two"]
+    },
+  },
   "$schema": "http://json-schema.org/schema#",
   "title": "test",
   "description": "test list",
   "type": "object",
   "namesake": "moniker",
   "patternProperties": {
-    "^test": {
+    ".*": {
       "type": "object",
       "title": "test entity",
       "properties": {
@@ -13,10 +19,7 @@
           "type": "string"
         },
         "someone": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
+          "$ref":"#/definitions/someone"
         },
         "around": {
           "type": "array",

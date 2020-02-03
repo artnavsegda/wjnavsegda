@@ -28,9 +28,6 @@
         "device":{
           "type":"string",
           "description":"Defines which switch to configure",
-          "cue":[
-            "switch.device"
-          ],
           "readonly":true
         },
         "port":{
@@ -40,15 +37,5 @@
         }
       }
     }
-  },
-  "commands":{
-  },
-  "acquire":{
-    "shell":"handler.sh",
-    "args":[
-      "get",
-      "master.schema",
-      "switch-master-ports"
-    ]
   }
 }

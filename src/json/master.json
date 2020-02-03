@@ -3,7 +3,7 @@
     "name":"eth1",
     "device":"switch0",
     "port":6,
-    "freq":"2.4Ghz"
+    "freq":"2.5Ghz"
   },
   "port_5":{
     "name":"eth0",
